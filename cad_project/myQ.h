@@ -32,6 +32,9 @@ class MyQ : public cSimpleModule
      cQueue queue;
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+
+  public:
+    int getQLength();
 };
 
 #endif

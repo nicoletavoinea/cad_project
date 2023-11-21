@@ -14,7 +14,7 @@
 // 
 
 #include "Scheduler.h"
-
+#include "myQ.h"
 Define_Module(Scheduler);
 
 
@@ -35,19 +35,49 @@ void Scheduler::initialize()
     NrUsers = par("gateSize").intValue();
     selfMsg = new cMessage("selfMsg");
        scheduleAt(simTime(), selfMsg);
+
+       // Access parameters from MyQ modules
+
 }
 
 void Scheduler::handleMessage(cMessage *msg)
 {
+    cModule *hpqModule = getModuleByPath("Network.hpq");
+    cModule *mpqModule = getModuleByPath("Network.mpq");
+    cModule *lpqModule = getModuleByPath("Network.lpq");
+    int hpqLength;
+    int mpqLength;
+    int lpqLength;
   //  int userWeights[NrUsers];
-    if (msg == selfMsg){
-        for(int i =0;i<NrUsers;i++){
-            cMessage *cmd = new cMessage("cmd");
-            //set parameter value, e.g., nr of blocks to be sent from the queue by user i
-            send(cmd,"txScheduling",i);
-        }
-        scheduleAt(simTime()+par("schedulingPeriod").doubleValue(), selfMsg);
+    if (hpqModule && mpqModule && lpqModule) {
+        hpqLength = check_and_cast<MyQ *>(hpqModule)->getQLength();
+        mpqLength = check_and_cast<MyQ *>(hpqModule)->getQLength();
+        lpqLength = check_and_cast<MyQ *>(hpqModule)->getQLength();
 
+        // Use retrieved parameters as needed
+        EV << "hpq Length: " << hpqLength << endl;
+        EV << "mpq Length: " << mpqLength << endl;
+        EV << "lpq Length: " << lpqLength << endl;
+
+        // Your logic using these parameters
+    } else {
+        EV << "Error: One or more queues not found!" << endl;
+        // Handle error condition (if needed)
     }
+    int j=0;
+
+    if (msg == selfMsg){
+
+        while(j<(hpqLength+mpqLength+lpqLength)){
+               for(int i =0;i<NrUsers;i++){
+                   cMessage *cmd = new cMessage("cmd");
+                   //set parameter value, e.g., nr of blocks to be sent from the queue by user i
+                   send(cmd,"txScheduling",i);
+               }
+               j++;
+               }
+               scheduleAt(simTime()+par("schedulingPeriod").doubleValue(), selfMsg);
+
+           }
 
 }

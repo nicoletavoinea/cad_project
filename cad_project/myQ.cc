@@ -25,17 +25,21 @@ void MyQ::initialize()
 void MyQ::handleMessage(cMessage *msg)
 {
     //int i;
-    //int ql;
-    //ql = queue.getLength();
+
     if (msg->arrivedOn("rxPackets")){
         queue.insert(msg);
     } else if (msg->arrivedOn("rxScheduling")){
         //read parameters from msg
         delete msg;
         //empty the queue !
-        while(!queue.isEmpty()){
+        if(!queue.isEmpty()){
           msg = (cMessage *)queue.pop();
           send(msg, "txPackets");
         }
     }
 }
+
+int MyQ::getQLength(){
+    return queue.getLength();
+}
+
