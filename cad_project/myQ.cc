@@ -28,6 +28,7 @@ void MyQ::handleMessage(cMessage *msg)
 
     if (msg->arrivedOn("rxPackets")){
         queue.insert(msg);
+        EV <<"Q Length: "<<queue.getLength();
     } else if (msg->arrivedOn("rxScheduling")){
         //read parameters from msg
         delete msg;

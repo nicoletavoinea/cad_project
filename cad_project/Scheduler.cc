@@ -35,49 +35,68 @@ void Scheduler::initialize()
     NrUsers = par("gateSize").intValue();
     selfMsg = new cMessage("selfMsg");
        scheduleAt(simTime(), selfMsg);
-
-       // Access parameters from MyQ modules
+    lastSentTime[0]=simTime();
+    lastSentTime[1]=simTime();
+    lastSentTime[2]=simTime();
 
 }
+
 
 void Scheduler::handleMessage(cMessage *msg)
 {
     cModule *hpqModule = getModuleByPath("Network.hpq");
     cModule *mpqModule = getModuleByPath("Network.mpq");
     cModule *lpqModule = getModuleByPath("Network.lpq");
-    int hpqLength;
-    int mpqLength;
-    int lpqLength;
-  //  int userWeights[NrUsers];
+    int qLength[3];
+
     if (hpqModule && mpqModule && lpqModule) {
-        hpqLength = check_and_cast<MyQ *>(hpqModule)->getQLength();
-        mpqLength = check_and_cast<MyQ *>(hpqModule)->getQLength();
-        lpqLength = check_and_cast<MyQ *>(hpqModule)->getQLength();
+        qLength[0] = check_and_cast<MyQ *>(hpqModule)->getQLength();
+        qLength[1] = check_and_cast<MyQ *>(mpqModule)->getQLength();
+        qLength[2] = check_and_cast<MyQ *>(lpqModule)->getQLength();
 
         // Use retrieved parameters as needed
-        EV << "hpq Length: " << hpqLength << endl;
-        EV << "mpq Length: " << mpqLength << endl;
-        EV << "lpq Length: " << lpqLength << endl;
+        EV << "hpq Length: " << qLength[0] << endl;
+        EV << "mpq Length: " << qLength[1] << endl;
+        EV << "lpq Length: " << qLength[2] << endl;
 
         // Your logic using these parameters
     } else {
         EV << "Error: One or more queues not found!" << endl;
         // Handle error condition (if needed)
     }
-    int j=0;
+
+    int toServe;
+    int userWeights[3]={4,2,1};
 
     if (msg == selfMsg){
+        cMessage *cmd = new cMessage("cmd");
+        toServe=auctionByTime(lastSentTime,3,qLength,userWeights);
+        if(toServe!=-1)
+            send(cmd,"txScheduling",toServe);
 
-        while(j<(hpqLength+mpqLength+lpqLength)){
-               for(int i =0;i<NrUsers;i++){
-                   cMessage *cmd = new cMessage("cmd");
-                   //set parameter value, e.g., nr of blocks to be sent from the queue by user i
-                   send(cmd,"txScheduling",i);
-               }
-               j++;
-               }
-               scheduleAt(simTime()+par("schedulingPeriod").doubleValue(), selfMsg);
+        scheduleAt(simTime()+par("schedulingPeriod").doubleValue(), selfMsg);
 
-           }
-
+     }
 }
+
+int Scheduler::auctionByTime(simtime_t* lastSentTime,int size,int *qLength,int *userWeights){
+    EV<<"Simulation time:"<<simTime()<<endl;
+    EV<<"Scheduler chooses between: "<<lastSentTime[0]<<"      "<<lastSentTime[1]<<"      "<<lastSentTime[2]<<"      ";
+    simtime_t max=0;
+    int maxUser=-1;
+    for(int i=0;i<size;i++){
+        if((simTime()-lastSentTime[i])*userWeights[i]>max && qLength[i]!=0)
+            {
+            max=(simTime()-lastSentTime[i])*userWeights[i];
+            maxUser=i;
+            }
+    }
+    if(maxUser!=-1)
+        lastSentTime[maxUser]=simTime();
+    EV<<"Winner:"<<maxUser;
+    return maxUser;
+}
+
+
+
+

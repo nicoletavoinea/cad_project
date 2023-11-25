@@ -31,11 +31,13 @@ public:
 private:
     cMessage *selfMsg;
     int NrUsers;
+    simtime_t lastSentTime[3];
    // int userWeights[3];
 
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+    int auctionByTime(simtime_t* lastSentTime,int size,int *qLength,int *userWeights);
 };
 
 #endif

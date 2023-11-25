@@ -21,7 +21,7 @@ simple Scheduler
       parameters:
         //@display("i=block/dispatch");
         //volatile 
-        double schedulingPeriod @unit(ms) = default(1ms);
+        double schedulingPeriod @unit(ms) = default(0.1ms);
         int gateSize=default(3);//me, dt
 
     gates:
