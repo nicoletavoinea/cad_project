@@ -20,6 +20,7 @@ simple MyQ
 {
     parameters:  
         int NrInputs;
+        int Kind;
       gates:
         input rxScheduling;
         input rxPackets[NrInputs];

@@ -40,12 +40,15 @@ sources[nrHP + nrMP + nrLP]: Source {
 }
 hpq: MyQ{
     NrInputs = nrHP;
+    Kind=0;
 }
 mpq: MyQ{
 	NrInputs = nrMP;
+	Kind=1;
 }
 lpq: MyQ{
 	NrInputs = nrLP;
+	Kind=2;
 }
 	
  

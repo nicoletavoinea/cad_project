@@ -24,9 +24,11 @@ void MyQ::initialize()
 
 void MyQ::handleMessage(cMessage *msg)
 {
-    //int i;
+    int QKind=par("Kind").intValue();
 
     if (msg->arrivedOn("rxPackets")){
+        msg->setKind(QKind);
+        msg->setTimestamp();
         queue.insert(msg);
         EV <<"Q Length: "<<queue.getLength();
     } else if (msg->arrivedOn("rxScheduling")){

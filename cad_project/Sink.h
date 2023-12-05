@@ -27,6 +27,12 @@ class Sink : public cSimpleModule
 {
 private:
   //  simsignal_t lifetimeSignal;
+    cLongHistogram histogram_lifetimeHQ;
+    cLongHistogram histogram_lifetimeMQ;
+    cLongHistogram histogram_lifetimeLQ;
+    cOutVector vector_lifetimeHQ;
+    cOutVector vector_lifetimeMQ;
+    cOutVector vector_lifetimeLQ;
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);

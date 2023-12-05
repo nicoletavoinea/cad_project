@@ -25,7 +25,21 @@ void Sink::initialize()
 void Sink::handleMessage(cMessage *msg)
 {
     simtime_t lifetime = simTime() - msg->getCreationTime();
-      EV << "Received " << msg->getName() << ", lifetime: " << lifetime << "s" << endl;
+    EV << "Received " << msg->getName() << ", lifetime: " << lifetime << "s" << endl;
     //  emit(lifetimeSignal, lifetime);
-      delete msg;
+
+    if(msg->getKind()==0){//HQ
+        histogram_lifetimeHQ.collect(lifetime*1000);
+        vector_lifetimeHQ.record(lifetime *1000);
+    }
+    else if(msg->getKind()==1){//MQ
+            histogram_lifetimeMQ.collect(lifetime*1000);
+            vector_lifetimeMQ.record(lifetime *1000);
+    }
+    else if(msg->getKind()==2){//LQ
+            histogram_lifetimeLQ.collect(lifetime*1000);
+            vector_lifetimeLQ.record(lifetime *1000);
+    }
+
+    delete msg;
 }

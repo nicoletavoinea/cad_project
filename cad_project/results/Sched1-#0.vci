@@ -1,0 +1,29 @@
+file 2733 1701804371                                            
+version 2
+run Sched1-0-20231205-21:22:01-16396
+attr configname Sched1
+attr datetime 20231205-21:22:01
+attr experiment Sched1
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network Network
+attr processid 16396
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+param *.nrHP 2
+param *.nrMP 3
+param *.nrLP 2
+param Network.sources[*].sendIaTime "0.2 ms"
+
+vector 0 Network.sink "" ETV
+vector 1 Network.sink "" ETV
+vector 2 Network.sink "" ETV
+0	552 1011 18 570 0.05 4.35 42 12.286191347 299.538475037 4314.069902749 676647.99331867
+1	1563 773 24 579 0.15 4.4 31 150 2552.976995857 44103.65813106 77533907.178531
+2	2336 395 38 582 0.25 4.45 16 250 2218.1621639 24329.866568307 43667394.392929
+

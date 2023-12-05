@@ -76,7 +76,15 @@ void Scheduler::handleMessage(cMessage *msg)
 
         scheduleAt(simTime()+par("schedulingPeriod").doubleValue(), selfMsg);
 
-     }
+
+
+        //unde initializam dimensiunea pachetului?
+        //trebuie schimbat timpul de schedule ca sa se activeze din nou schedulerul dupa ce se trimite pachetul curent?
+        //la comparatia din scheduler trebuie comparate intervale de timp sau timp gen simtime?
+
+
+
+        }
 }
 
 int Scheduler::auctionByTime(simtime_t* lastSentTime,int size,int *qLength,int *userWeights){
