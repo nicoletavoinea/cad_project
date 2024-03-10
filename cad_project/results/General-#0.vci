@@ -1,0 +1,32 @@
+                                                                
+version 2
+run General-0-20240310-14:55:51-18716
+attr configname General
+attr datetime 20240310-14:55:51
+attr experiment General
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvarsf ""
+attr measurement ""
+attr network Network
+attr processid 18716
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+
+vector 0 Network.flc "delay vector" ETV
+vector 1 Network.flc "result nescalat" ETV
+vector 2 Network.flc "res scalat" ETV
+vector 3 Network.flc "weight vector" ETV
+vector 4 Network.sink "" ETV
+vector 5 Network.sink "" ETV
+vector 6 Network.sink "" ETV
+0	627 232 9 423 0 18 19 15 15 285 4275
+1	859 232 9 423 0 18 19 34 34 646 21964
+2	1091 213 9 423 0 18 19 1 1 19 19
+3	1304 213 9 423 0 18 19 5 5 95 475
+4	1517 36 12 195 0.05 8 2 41.254954342 50 91.254954342 4201.9712577605
+5	1553 36 15 221 0.1 9 2 14.396115161 100 114.396115161 10207.248131729
+6	1589 40 18 303 0.15 12.6 2 40.692419526 150 190.692419526 24155.87300688

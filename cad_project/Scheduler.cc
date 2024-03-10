@@ -15,9 +15,8 @@
 
 #include "Scheduler.h"
 #include "myQ.h"
+#include "flc.h"
 Define_Module(Scheduler);
-
-
 
 Scheduler::Scheduler()
 {
@@ -38,7 +37,8 @@ void Scheduler::initialize()
     lastSentTime[0]=simTime();
     lastSentTime[1]=simTime();
     lastSentTime[2]=simTime();
-
+    cModule *flcModule = getModuleByPath("Network.flc");
+    EV<<"number of inputs:"<<check_and_cast<FLC *>(flcModule)->n_inp<<endl;
 }
 
 

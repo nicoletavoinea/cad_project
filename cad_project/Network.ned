@@ -18,7 +18,8 @@ import Source;
 import Sink;
 import Scheduler;
 import MyQ;
-
+import FLC;
+  
 network Network
 
 {
@@ -29,14 +30,11 @@ network Network
    submodules:
 scheduler: Scheduler {
     gateSize = 3;
-//@display("p=120,40");
 }
 sink: Sink {
 	gateSize = 3;
-//@display("p=120,200");
 }
 sources[nrHP + nrMP + nrLP]: Source {
-//@display("p=40,120");
 }
 hpq: MyQ{
     NrInputs = nrHP;
@@ -49,6 +47,10 @@ mpq: MyQ{
 lpq: MyQ{
 	NrInputs = nrLP;
 	Kind=2;
+}
+flc: FLC {
+}
+gen: GeneratorFLC {
 }
 	
  
@@ -70,6 +72,7 @@ mpq.txPackets --> sink.rxPackets[1];
 lpq.txPackets --> sink.rxPackets[2];
 //scheduler.txScheduling[i] --> user[i].rxScheduling;
 //user[i].txPackets --> sink.rxPackets[i];
+gen.out --> flc.in;
 
 }     
         
