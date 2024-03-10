@@ -17,6 +17,7 @@
 #define __SCHED_TST_SINK_H_
 
 #include <omnetpp.h>
+#include <deque>
 
 using namespace omnetpp;
 
@@ -33,9 +34,13 @@ private:
     cOutVector vector_lifetimeHQ;
     cOutVector vector_lifetimeMQ;
     cOutVector vector_lifetimeLQ;
+    std::deque<simtime_t> last10Lifetimes;
+
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
+  public:
+    simtime_t getAverageDelayHP();
 };
 
 #endif

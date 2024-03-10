@@ -31,6 +31,12 @@ void Sink::handleMessage(cMessage *msg)
     if(msg->getKind()==0){//HQ
         histogram_lifetimeHQ.collect(lifetime*1000);
         vector_lifetimeHQ.record(lifetime *1000);
+
+        last10Lifetimes.push_back(lifetime);
+        // Ensure only the last 10 values are kept
+        if (last10Lifetimes.size() > 10) {
+            last10Lifetimes.pop_front(); // Removes the oldest value
+        }
     }
     else if(msg->getKind()==1){//MQ
             histogram_lifetimeMQ.collect(lifetime*1000);
@@ -41,5 +47,21 @@ void Sink::handleMessage(cMessage *msg)
             vector_lifetimeLQ.record(lifetime *1000);
     }
 
+
     delete msg;
 }
+
+simtime_t Sink::getAverageDelayHP(){
+    if (last10Lifetimes.empty()) {
+          return 0.0; // Return 0 or an appropriate value if the container is empty
+      }
+
+      simtime_t sum = 0.0;
+      for (simtime_t value : last10Lifetimes) {
+          sum += value;
+          EV<<"lifetime vector: "<<value<<endl;
+      }
+      EV<<endl<<endl;
+      return sum / last10Lifetimes.size();
+}
+

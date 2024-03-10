@@ -16,6 +16,7 @@
 #include "Scheduler.h"
 #include "myQ.h"
 #include "flc.h"
+#include "Sink.h"
 Define_Module(Scheduler);
 
 Scheduler::Scheduler()
@@ -47,6 +48,7 @@ void Scheduler::handleMessage(cMessage *msg)
     cModule *hpqModule = getModuleByPath("Network.hpq");
     cModule *mpqModule = getModuleByPath("Network.mpq");
     cModule *lpqModule = getModuleByPath("Network.lpq");
+    cModule *sinkModule = getModuleByPath("Network.sink");
     int qLength[3];
 
     if (hpqModule && mpqModule && lpqModule) {
@@ -69,6 +71,8 @@ void Scheduler::handleMessage(cMessage *msg)
     int userWeights[3]={4,2,1};
 
     if (msg == selfMsg){
+        simtime_t averageDelay=check_and_cast<Sink *>(sinkModule)->getAverageDelayHP();
+        EV<<"Average delay (last 10 messages):"<<averageDelay;
         cMessage *cmd = new cMessage("cmd");
         toServe=auctionByTime(lastSentTime,3,qLength,userWeights);
         if(toServe!=-1)
