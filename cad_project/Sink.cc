@@ -16,10 +16,19 @@
 #include "Sink.h"
 
 Define_Module(Sink);
-
+Sink::Sink(){
+    sendMessageEvent = nullptr;
+}
+Sink::~Sink()
+{
+    cancelAndDelete(sendMessageEvent);
+}
 void Sink::initialize()
 {
    // lifetimeSignal = registerSignal("lifetime");
+
+
+
 }
 
 void Sink::handleMessage(cMessage *msg)
@@ -29,6 +38,8 @@ void Sink::handleMessage(cMessage *msg)
     //  emit(lifetimeSignal, lifetime);
 
     if(msg->getKind()==0){//HQ
+        cMessage *job1 = new cMessage("job1");
+        send(job1, "delay");
         histogram_lifetimeHQ.collect(lifetime*1000);
         vector_lifetimeHQ.record(lifetime *1000);
 
@@ -37,6 +48,10 @@ void Sink::handleMessage(cMessage *msg)
         if (last10Lifetimes.size() > 10) {
             last10Lifetimes.pop_front(); // Removes the oldest value
         }
+        EV <<"kind=0"<<endl;
+        setAverageDelayHP();
+       // cMessage *job1 = new cMessage("job1");
+        //send(job1, "delay");
     }
     else if(msg->getKind()==1){//MQ
             histogram_lifetimeMQ.collect(lifetime*1000);
@@ -51,9 +66,9 @@ void Sink::handleMessage(cMessage *msg)
     delete msg;
 }
 
-simtime_t Sink::getAverageDelayHP(){
+void Sink::setAverageDelayHP(){
     if (last10Lifetimes.empty()) {
-          return 0.0; // Return 0 or an appropriate value if the container is empty
+        //getParentModule()->getSubmodule("Network")->par("currentDelay").setDoubleValue(0);
       }
 
       simtime_t sum = 0.0;
@@ -62,6 +77,9 @@ simtime_t Sink::getAverageDelayHP(){
           EV<<"lifetime vector: "<<value<<endl;
       }
       EV<<endl<<endl;
-      return sum / last10Lifetimes.size();
+      //getParentModule()->getSubmodule("Network")->par("currentDelay").setDoubleValue((sum / last10Lifetimes.size()).dbl());
+      //double curDel=getParentModule()->getSubmodule("Network")->par("currentDelay");
+      //EV<<"Average delay (last 10 messages):"<<curDel;
+
 }
 

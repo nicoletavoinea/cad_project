@@ -71,8 +71,8 @@ void Scheduler::handleMessage(cMessage *msg)
     int userWeights[3]={4,2,1};
 
     if (msg == selfMsg){
-        simtime_t averageDelay=check_and_cast<Sink *>(sinkModule)->getAverageDelayHP();
-        EV<<"Average delay (last 10 messages):"<<averageDelay;
+        //simtime_t averageDelay=check_and_cast<Sink *>(sinkModule)->getAverageDelayHP();
+        //EV<<"Average delay (last 10 messages):"<<averageDelay;
         cMessage *cmd = new cMessage("cmd");
         toServe=auctionByTime(lastSentTime,3,qLength,userWeights);
         if(toServe!=-1)

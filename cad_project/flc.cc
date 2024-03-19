@@ -499,7 +499,7 @@ void FLC::handleMessage(cMessage *msg)
 
 	    ev << "Calculez nou HP" << endl;
 	    int wantedDelay = 10;//(int)getParentModule()->par("delayLimit");
-	    int currentDelay = 15;//round((double)getParentModule()->getSubmodule("netwrk")->par("meanDelayHP"));
+	    int currentDelay = 15;//round((double)getParentModule()->getSubmodule("Network")->par("currentDelay"));
 	    int W_HP = 4;//(int)getParentModule()->getSubmodule("hp_fifo")->par("weight");
 	    int B = 31;//(int)getParentModule()->getSubmodule("netwrk")->par("B");
 

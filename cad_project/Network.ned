@@ -27,6 +27,7 @@ network Network
         int nrHP;
         int nrMP;
         int nrLP;
+        int currentDelay;
    submodules:
 scheduler: Scheduler {
     gateSize = 3;
@@ -73,6 +74,7 @@ lpq.txPackets --> sink.rxPackets[2];
 //scheduler.txScheduling[i] --> user[i].rxScheduling;
 //user[i].txPackets --> sink.rxPackets[i];
 gen.out --> flc.in;
+sink.delay --> flc.delay;
 
 }     
         

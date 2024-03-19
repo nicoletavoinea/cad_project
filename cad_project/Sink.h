@@ -35,12 +35,15 @@ private:
     cOutVector vector_lifetimeMQ;
     cOutVector vector_lifetimeLQ;
     std::deque<simtime_t> last10Lifetimes;
+    cMessage *sendMessageEvent;
 
   protected:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
   public:
-    simtime_t getAverageDelayHP();
+    void setAverageDelayHP();
+    Sink();
+    ~Sink();
 };
 
 #endif
