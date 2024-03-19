@@ -33,6 +33,7 @@ private:
     int NrUsers;
     simtime_t lastSentTime[3];
    // int userWeights[3];
+    int userWeights[3];
 
   protected:
     virtual void initialize();

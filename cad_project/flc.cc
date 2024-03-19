@@ -508,7 +508,7 @@ void FLC::handleMessage(cMessage *msg)
     }
 
     ev << "Calculez nou HP" << endl;
-    int wantedDelay = 35;
+    int wantedDelay = 250;
     int B = 31;//(int)getParentModule()->getSubmodule("netwrk")->par("B");
     int new_W_HP = W_HP;
     int diff = wantedDelay - currentDelay;
@@ -529,6 +529,8 @@ void FLC::handleMessage(cMessage *msg)
     new_W_HP = new_W_HP + res;
     if (new_W_HP>B) new_W_HP = B-1;
     if (new_W_HP<2) new_W_HP = 2;
+
+
 
 /* not or test
     cPar& W_HP_r = getParentModule()->getSubmodule("hp_fifo")->par("weight");

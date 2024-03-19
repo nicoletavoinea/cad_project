@@ -38,6 +38,9 @@ void Scheduler::initialize()
     lastSentTime[0]=simTime();
     lastSentTime[1]=simTime();
     lastSentTime[2]=simTime();
+    userWeights[0]=4;
+    userWeights[1]=2;
+    userWeights[2]=1;
 
 }
 
@@ -67,7 +70,7 @@ void Scheduler::handleMessage(cMessage *msg)
     }
 
     int toServe;
-    int userWeights[3]={4,2,1};
+
 
     if (msg->hasPar("weight")){
         userWeights[0]=msg->par("weight");
