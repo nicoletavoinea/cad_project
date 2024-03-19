@@ -229,6 +229,7 @@ FLC::~FLC()
 
 void FLC::initialize()
 {
+    W_HP = 4;
     qtime.setName("delay vector");
     qtimew.setName("weight vector");
     result_dep.setName("result nescalat");
@@ -494,52 +495,56 @@ int FLC::fuzzy_inference(int* inp, int nb_inp, int delta)
 
 void FLC::handleMessage(cMessage *msg)
 {
-	if (!strcmp(msg->getName(),"start_flc"))
-	{
+    int currentDelay=0;
 
-	    ev << "Calculez nou HP" << endl;
-	    int wantedDelay = 10;//(int)getParentModule()->par("delayLimit");
-	    int currentDelay = 15;//round((double)getParentModule()->getSubmodule("Network")->par("currentDelay"));
-	    int W_HP = 4;//(int)getParentModule()->getSubmodule("hp_fifo")->par("weight");
-	    int B = 31;//(int)getParentModule()->getSubmodule("netwrk")->par("B");
+    if(msg->hasPar("averageDelay"))
+    {
+        currentDelay = msg->par("averageDelay");
+        ev<<" received: " <<currentDelay;
+    }
+    else
+    {
+        ev<<"nu are param averageDlay";
+    }
 
-	    int new_W_HP = W_HP;
-		int diff = wantedDelay - currentDelay;
+    ev << "Calculez nou HP" << endl;
+    int wantedDelay = 35;
+    int B = 31;//(int)getParentModule()->getSubmodule("netwrk")->par("B");
+    int new_W_HP = W_HP;
+    int diff = wantedDelay - currentDelay;
+    qtime.record (currentDelay);
+    ev<<" Dif nescalat = "<<diff<<"\n";
+    diff = scale(0, 62, -10, 10, diff);
+    W_HP = scale(0, 62, 0, B, W_HP);
+    ev<<" Dif scalat = "<<diff<<"\n";
 
-		qtime.record (currentDelay);
-		ev<<" Dif nescalat = "<<diff<<"\n";
+    int delta = 0;//(int) getParentModule()->par("delta");
+    int inp[2]={diff,W_HP};
 
-		diff = scale(0, 62, -10, 10, diff);
-		W_HP = scale(0, 62, 0, B, W_HP);
-		ev<<" Dif scalat = "<<diff<<"\n";
-			
-		int delta = 0;//(int) getParentModule()->par("delta");
-		int inp[2]={diff,W_HP};
-		
-		int result = fuzzy_inference(inp,2, delta);
-		result_dep.record (result);
+    int result = fuzzy_inference(inp,2, delta);
+    result_dep.record (result);
+    int res = round(scale((B * -1)/2, B/2, 0, 62, result));
+    ev<<" Result = "<<result<<"\nRes= "<<res<<"\n";
+    res_dep.record (res);
+    new_W_HP = new_W_HP + res;
+    if (new_W_HP>B) new_W_HP = B-1;
+    if (new_W_HP<2) new_W_HP = 2;
 
-		int res = round(scale((B * -1)/2, B/2, 0, 62, result));
-		ev<<" Result = "<<result<<"\nRes= "<<res<<"\n";
-
-		res_dep.record (res);
-
-		new_W_HP = new_W_HP + res;
-
-		if (new_W_HP>B) new_W_HP = B-1;
-		if (new_W_HP<1) new_W_HP = 1;
-
-/* not for test
-		cPar& W_HP_r = getParentModule()->getSubmodule("hp_fifo")->par("weight");
-		W_HP_r.setIntValue(new_W_HP);
+/* not or test
+    cPar& W_HP_r = getParentModule()->getSubmodule("hp_fifo")->par("weight");
+        W_HP_r.setIntValue(new_W_HP);
 */
-		ev<<"Pondere noua: "<<new_W_HP<<"\n\n";
-		
-		qtimew.record(new_W_HP);
-		//cMessage *job = new cMessage("clear");
-		//sendDirect(job, getParentModule()->getSubmodule("netwrk")->gate("in"));
-		delete msg;
-	}
+    ev<<"Pondere noua: "<<new_W_HP<<"\n\n";
+    W_HP=new_W_HP;
+
+    qtimew.record(new_W_HP);
+
+    cMessage *weight = new cMessage("weight");
+    weight->addPar("weight") = W_HP;
+    send(weight, "out");
+
+    delete msg;
+
 }
 
 

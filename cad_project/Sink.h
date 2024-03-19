@@ -41,7 +41,7 @@ private:
     virtual void initialize();
     virtual void handleMessage(cMessage *msg);
   public:
-    void setAverageDelayHP();
+    double getAverageDelayHP();
     Sink();
     ~Sink();
 };

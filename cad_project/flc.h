@@ -62,12 +62,12 @@ public:
     virtual void initialize() override;
     virtual void handleMessage(cMessage *msg) override;
     int fuzzy_inference(int* inp, int nb_inp, int delta);
-    int n_inp;
+    int W_HP;
 
 private:
     int bits_n; // number of binary vectors representing a membership function
     int bits_m; // number of bits in each vector /
-   // int n_inp;  // number of inputs /
+    int n_inp;  // number of inputs /
     int n_rules;  // number of rules /
     int nb_terms[MAX_NR_INP+1];
     Term* m_functions[MAX_NR_INP+1][MAX_NR_TERMS]; /* membership functions for input and output */

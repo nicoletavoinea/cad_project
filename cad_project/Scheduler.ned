@@ -25,5 +25,8 @@ simple Scheduler
         int gateSize=default(3);//me, dt
 
     gates:
+        input in;
         output txScheduling[gateSize];
+        
+
 }

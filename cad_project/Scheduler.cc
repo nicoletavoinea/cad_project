@@ -38,8 +38,7 @@ void Scheduler::initialize()
     lastSentTime[0]=simTime();
     lastSentTime[1]=simTime();
     lastSentTime[2]=simTime();
-    cModule *flcModule = getModuleByPath("Network.flc");
-    EV<<"number of inputs:"<<check_and_cast<FLC *>(flcModule)->n_inp<<endl;
+
 }
 
 
@@ -70,7 +69,11 @@ void Scheduler::handleMessage(cMessage *msg)
     int toServe;
     int userWeights[3]={4,2,1};
 
-    if (msg == selfMsg){
+    if (msg->hasPar("weight")){
+        userWeights[0]=msg->par("weight");
+        EV <<"The new weight (printed from sch): "<< userWeights[0];
+    }
+    else if (msg == selfMsg){
         //simtime_t averageDelay=check_and_cast<Sink *>(sinkModule)->getAverageDelayHP();
         //EV<<"Average delay (last 10 messages):"<<averageDelay;
         cMessage *cmd = new cMessage("cmd");
@@ -79,14 +82,6 @@ void Scheduler::handleMessage(cMessage *msg)
             send(cmd,"txScheduling",toServe);
 
         scheduleAt(simTime()+par("schedulingPeriod").doubleValue(), selfMsg);
-
-
-
-        //unde initializam dimensiunea pachetului?
-        //trebuie schimbat timpul de schedule ca sa se activeze din nou schedulerul dupa ce se trimite pachetul curent?
-        //la comparatia din scheduler trebuie comparate intervale de timp sau timp gen simtime?
-
-
 
         }
 }
