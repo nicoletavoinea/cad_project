@@ -509,19 +509,18 @@ void FLC::handleMessage(cMessage *msg)
 
     ev << "Calculez nou HP" << endl;
     int wantedDelay = 250;
-    int B = 31;//(int)getParentModule()->getSubmodule("netwrk")->par("B");
+    int B = 31;
     int new_W_HP = W_HP;
     int diff = wantedDelay - currentDelay;
     qtime.record (currentDelay);
     ev<<" Dif nescalat = "<<diff<<"\n";
-    diff = scale(0, 62, -10, 10, diff);
-    W_HP = scale(0, 62, 0, B, W_HP);
+    diff = scale(0, 62, -250, 400, diff);
     ev<<" Dif scalat = "<<diff<<"\n";
 
-    int delta = 0;//(int) getParentModule()->par("delta");
-    int inp[2]={diff,W_HP};
+    int delta = 0;
+    int inp[1]={diff};
 
-    int result = fuzzy_inference(inp,2, delta);
+    int result = fuzzy_inference(inp,1, delta);
     result_dep.record (result);
     int res = round(scale((B * -1)/2, B/2, 0, 62, result));
     ev<<" Result = "<<result<<"\nRes= "<<res<<"\n";
